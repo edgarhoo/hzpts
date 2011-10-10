@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <title>Hangzhou Public Transport Search</title>
+        <meta name="author" content="Edgar Hoo, edgarhoo.net"/>
+        <link rel="stylesheet" href="hzpts.css" />
+        <script src="http://api.ditu.aliyun.com/map.js"></script>
+        <script src="http://api.ditu.aliyun.com/ajax.js"></script>
+    </head>
+    <body>
+        <div id="hzpts" class="hzpts-home">
+            <header id="header">
+                <h1>HZPTS<small>Hangzhou Public Transport Search</small></h1>
+            </header>
+            <div id="content">
+                <div class="type">
+                    <input id="type-route" type="radio" name="type" value="route" checked="checked" />
+                    <label for="type-route">换乘</label>
+                    <input id="type-line" type="radio" name="type" value="line" />
+                    <label for="type-line">路线</label>
+                    <input id="type-station" type="radio" name="type" value="station" />
+                    <label for="type-station">站点</label>
+                </div>
+                <div class="input current-route">
+                    <div class="option-route">
+                        <input id="route-from" name="from" placeholder="请输入起始站" />
+                        至
+                        <input id="route-to" name="to" placeholder="请输入终点站" />
+                    </div>
+                    <div class="option-line">
+                        <input id="line-name" name="line" placeholder="请输入线路名" />
+                    </div>
+                    <div class="option-station">
+                        <input id="station-name" name="station" placeholder="请输入站点名" />
+                    </div>
+                </div>
+                <div class="button">
+                    <button type="submit">查询</button>
+                </div>
+                <div class="message">
+                    <p></p>
+                </div>
+                <div class="output">
+                
+                </div>
+            </div>
+        </div>
+        <script src="http://static.edgar.im/sys/fdev4/fdev4.js"></script>
+        <script src="http://static.edgar.im/sys/hexjs/hex.js"></script>
+        <script src="hzpts.js"></script>
+    </body>
+</html>
