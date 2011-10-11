@@ -40,7 +40,7 @@
         };
         
         $('div.type input').bind( 'change', function(){
-            currentType = $(this).val();
+            current = $(this).val();
             setType();
         } );
     } );
