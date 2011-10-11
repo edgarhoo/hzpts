@@ -50,9 +50,7 @@
             changeType();
         };
         
-        $('div.type').delegate( 'input', 'change', function(){
-            changeType();
-        } );
+        $('div.type input').bind( 'change', changeType );
     } );
     
     /**
