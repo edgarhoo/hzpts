@@ -7,10 +7,28 @@
 (function( $, define, register ){
     
     /**
+     * @module event
+     * */
+    define( 'event', function( require, exports ){
+        
+        var checkTouch = function(){
+            var div = document.createElement('div');
+            div.setAttribute( 'ontouchmove', 'return' );
+            if ( 'function' === typeof div.ontouchmove ){
+                return 'touchmove';
+            }
+            return 'click';
+        };
+
+        exports.touchmove = checkTouch();
+    } );
+    
+    /**
      * @module switch search type
      * */
     define( 'switchType', function( require, exports ){
-        var $input = $('div.input')[0],
+        var touchmove = require('event').touchmove,
+            $input = $('div.input')[0],
             type = '',
         
         getCurrent = exports.getCurrent = function(){
@@ -32,7 +50,7 @@
             changeType();
         };
         
-        $('div.type').delegate( 'input', 'click.sw', function(){
+        $('div.type').delegate( 'input', touchmove, function(){
             changeType();
         } );
     } );
@@ -87,6 +105,7 @@
      * */
     define( 'render', function( require, exports ){
         var $output = $('div.output'),
+            touchmove = require('event').touchmove,
             message = require('message'),
             guid = 0,
             currentLine,
@@ -100,7 +119,7 @@
         },
         
         lineClick = function( $item, bus ){
-            $item.delegate( 'a.line', 'click.render', function(e){
+            $item.delegate( 'a.line', touchmove, function(e){
                 e.preventDefault();
                 var $this = $(this);
                 if ( 'true' === $this.attr('data-loaded') ){
@@ -114,7 +133,7 @@
         },
         
         stationClick = function( $item, bus ){
-            $item.delegate( 'a.station', 'click.render', function(e){
+            $item.delegate( 'a.station', touchmove, function(e){
                 e.preventDefault();
                 var $this = $(this);
                 if ( 'true' === $this.attr('data-loaded') ){
@@ -383,6 +402,7 @@
      * */
     define(function( require, exports ){
         var type = require('switchType'),
+            touchmove = require('event').touchmove,
             message = require('message'),
             valid = require('validation'),
             route = require('route'),
@@ -391,11 +411,9 @@
             $from = $('#route-from'),
             $to = $('#route-to'),
             $line = $('#line-name'),
-            $station = $('#station-name');
+            $station = $('#station-name'),
         
-        type.init();
-        
-        $('div.button button').bind( 'click.submit', function(){
+        submit = function(){
             message.hide();
             switch( type.getCurrent() ){
                 case 'route':
@@ -408,7 +426,12 @@
                     valid.do( $station ) && station.search( $station.val() );
                     break;
             }
-        } );
+        };
+        
+        type.init();
+        
+        $('div.button button').bind( touchmove, submit );
+        
     }).register();
     
 })( jQuery, hexjs.define, hexjs.register );
