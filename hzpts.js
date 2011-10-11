@@ -44,7 +44,6 @@
         
         changeType = function(){
             $input.className = 'input current-' + getCurrent();
-            alert($input.className);
         };
         
         exports.init = function(){
@@ -426,9 +425,9 @@
                     break;
             }
         };
-        
+        alert(1);
         type.init();
-        
+        alert(2);
         $('div.button button').bind( touch, submit );
         
     }).register();
