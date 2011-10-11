@@ -44,6 +44,7 @@
         
         changeType = function(){
             $input.className = 'input current-' + getCurrent();
+            alert($input.className);
         };
         
         exports.init = function(){
