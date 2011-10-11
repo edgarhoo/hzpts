@@ -27,30 +27,22 @@
      * @module switch search type
      * */
     define( 'switchType', function( require, exports ){
-        var //touch = require('event').touch,
-            $input = $('div.input')[0],
-            type = '',
+        var $input = $('div.input')[0],
         
-        getCurrent = exports.getCurrent = function(){
-            type = '';
-            $('div.type input').each(function(){
-                if ( !this.checked ){
-                    return;
-                }
-                type = this.value;
-            });
-            return type;
-        },
+        current = exports.current = $('div.type input:checked').val(),
         
-        changeType = function(){
-            $input.className = 'input current-' + getCurrent();
+        setType = function(){
+            $input.className = 'input current-' + current;
         };
         
         exports.init = function(){
-            changeType();
+            setType();
         };
         
-        $('div.type input').bind( 'change', changeType );
+        $('div.type input').bind( 'change', function(){
+            currentType = $(this).val();
+            setType();
+        } );
     } );
     
     /**
@@ -413,7 +405,7 @@
         
         submit = function(){
             message.hide();
-            switch( type.getCurrent() ){
+            switch( type.current ){
                 case 'route':
                     valid.do( $from ) && valid.do( $to ) && route.search( $from.val(), $to.val() );
                     break;
@@ -425,9 +417,9 @@
                     break;
             }
         };
-        alert(1);
+        
         type.init();
-        alert(2);
+        
         $('div.button button').bind( touch, submit );
         
     }).register();
