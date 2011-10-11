@@ -13,21 +13,21 @@
         
         var checkTouch = function(){
             var div = document.createElement('div');
-            div.setAttribute( 'ontouchmove', 'return' );
-            if ( 'function' === typeof div.ontouchmove ){
-                return 'touchmove';
+            div.setAttribute( 'ontouchstart', 'return' );
+            if ( 'function' === typeof div.ontouchstart ){
+                return 'touch';
             }
             return 'click';
         };
 
-        exports.touchmove = checkTouch();
+        exports.touch = checkTouch();
     } );
     
     /**
      * @module switch search type
      * */
     define( 'switchType', function( require, exports ){
-        var touchmove = require('event').touchmove,
+        var //touch = require('event').touch,
             $input = $('div.input')[0],
             type = '',
         
@@ -50,7 +50,7 @@
             changeType();
         };
         
-        $('div.type').delegate( 'input', touchmove, function(){
+        $('div.type').delegate( 'input', 'change', function(){
             changeType();
         } );
     } );
@@ -105,7 +105,7 @@
      * */
     define( 'render', function( require, exports ){
         var $output = $('div.output'),
-            touchmove = require('event').touchmove,
+            //touchmove = require('event').touchmove,
             message = require('message'),
             guid = 0,
             currentLine,
@@ -119,7 +119,7 @@
         },
         
         lineClick = function( $item, bus ){
-            $item.delegate( 'a.line', touchmove, function(e){
+            $item.delegate( 'a.line', 'click', function(e){
                 e.preventDefault();
                 var $this = $(this);
                 if ( 'true' === $this.attr('data-loaded') ){
@@ -133,7 +133,7 @@
         },
         
         stationClick = function( $item, bus ){
-            $item.delegate( 'a.station', touchmove, function(e){
+            $item.delegate( 'a.station', 'click', function(e){
                 e.preventDefault();
                 var $this = $(this);
                 if ( 'true' === $this.attr('data-loaded') ){
@@ -402,7 +402,7 @@
      * */
     define(function( require, exports ){
         var type = require('switchType'),
-            touchmove = require('event').touchmove,
+            touch = require('event').touch,
             message = require('message'),
             valid = require('validation'),
             route = require('route'),
@@ -430,7 +430,7 @@
         
         type.init();
         
-        $('div.button button').bind( touchmove, submit );
+        $('div.button button').bind( touch, submit );
         
     }).register();
     
