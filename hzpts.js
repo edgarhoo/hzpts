@@ -1,47 +1,34 @@
 /**
  * @fileoverview javascript for HZPTS
  * @author Edgar
- * @build 111010
+ * @build 111012
  * */
  
 (function( $, define, register ){
     
     /**
-     * @module event
+     * @module search type
      * */
-    define( 'event', function( require, exports ){
-        
-        var checkTouch = function(){
-            var div = document.createElement('div');
-            div.setAttribute( 'ontouchstart', 'return' );
-            if ( 'function' === typeof div.ontouchstart ){
-                return 'touch';
-            }
-            return 'click';
-        };
-
-        exports.touch = checkTouch();
-    } );
-    
-    /**
-     * @module switch search type
-     * */
-    define( 'switchType', function( require, exports ){
+    define( 'type', function( require, exports ){
         var $input = $('div.input')[0],
         
-        current = exports.current = $('div.type input:checked').val(),
+        current = $('div.type input:checked').val(),
         
-        setType = function(){
+        set = function(){
             $input.className = 'input current-' + current;
         };
         
+        exports.get = function(){
+            return current;
+        },
+        
         exports.init = function(){
-            setType();
+            set();
         };
         
         $('div.type input').bind( 'change', function(){
             current = $(this).val();
-            setType();
+            set();
         } );
     } );
     
@@ -91,11 +78,31 @@
     } );
     
     /**
+     * @module validation
+     * */
+    define( 'validation', function( require, exports ){
+        var message = require('message');
+        
+        $('div.input input').bind( 'focus', function(){
+            $(this).removeClass('error');
+            message.hide();
+        } );
+        
+        exports.is = function( $input ){
+            if ( !!$input.val() ){
+                message.show('SEARCHING');
+                return true;
+            }
+            $input.addClass('error');
+            return false;
+        };
+    } );
+    
+    /**
      * @module render search result
      * */
     define( 'render', function( require, exports ){
         var $output = $('div.output'),
-            //touchmove = require('event').touchmove,
             message = require('message'),
             guid = 0,
             currentLine,
@@ -367,34 +374,12 @@
     } );
     
     /**
-     * @module validation
-     * */
-    define( 'validation', function( require, exports ){
-        var message = require('message');
-        
-        $('div.input').delegate( 'input', 'focus.valid', function(){
-            $(this).removeClass('error');
-            message.hide();
-        } );
-        
-        exports.do = function( $input ){
-            if ( !!$input.val() ){
-                message.show('SEARCHING');
-                return true;
-            }
-            $input.addClass('error');
-            return false;
-        };
-    } );
-    
-    /**
      * page init
      * */
     define(function( require, exports ){
-        var type = require('switchType'),
-            touch = require('event').touch,
+        var type = require('type'),
             message = require('message'),
-            valid = require('validation'),
+            is = require('validation').is,
             route = require('route'),
             line = require('line'),
             station = require('station'),
@@ -405,23 +390,22 @@
         
         submit = function(){
             message.hide();
-            switch( type.current ){
+            switch( type.get() ){
                 case 'route':
-                    valid.do( $from ) && valid.do( $to ) && route.search( $from.val(), $to.val() );
+                    is( $from ) && is( $to ) && route.search( $from.val(), $to.val() );
                     break;
                 case 'line':
-                    valid.do( $line ) && line.search( $line.val() );
+                    is( $line ) && line.search( $line.val() );
                     break;
                 case 'station':
-                    valid.do( $station ) && station.search( $station.val() );
+                    is( $station ) && station.search( $station.val() );
                     break;
             }
         };
         
         type.init();
         
-        $('div.button button').bind( touch, submit );
-        
+        $('div.button button').bind( 'click', submit );
     }).register();
     
 })( jQuery, hexjs.define, hexjs.register );
